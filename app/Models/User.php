@@ -17,11 +17,15 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    // protected $fillable = [
+    //     'name',
+    //     'email',
+    //     'contact_number',
+    //     'address',
+    //     'store',
+    //     'birthdate',
+    //     'level_of_access'
+    // ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,4 +45,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function scopeFilter($query, array $filters) {
+        if($filters['search'] ?? false) {
+            $query->where('name', 'like', '%' . request('search') . '%')
+            ->orWhere('email', 'like', '%' . request('search') . '%')
+            ->orWhere('contact_number', 'like', '%' . request('search') . '%')
+            ->orWhere('address', 'like', '%' . request('search') . '%')
+            ->orWhere('store', 'like', '%' . request('search') . '%')
+            ->orWhere('level_of_access', 'like', '%' . request('search') . '%');
+        }
+    }
 }
